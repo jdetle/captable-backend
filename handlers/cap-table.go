@@ -15,11 +15,25 @@ import (
 
 func CreateCTHandler(cfg *config.Config, captable *captable.CapTable) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		log.Debugf("CREATECTHANDLER: %#v", r)
 		var payload model.CreateCapTableRequest
 		err := httputils.ValidateJSONPayload(w, r.Body, &payload)
 		if err != nil {
 			return
 		}
+
+		err = payload.Validate()
+		if err != nil {
+			httputils.HTTPError(w, err.Error(), http.StatusBadRequest, err)
+			return
+		}
+
+		ct, err := captable.DAL.CreateCT(r.Context(), &payload)
+		if err != nil {
+			httputils.HTTPError(w, err.Error(), http.StatusInternalServerError, err)
+			return
+		}
+		httputils.SendJSON(w, http.StatusCreated, ct)
 	}
 }
 

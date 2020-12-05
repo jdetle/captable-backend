@@ -4,7 +4,9 @@ Package model contains structs for use in the store and handlers
 package model
 
 import (
+	"fmt"
 	"regexp"
+	"strings"
 	"time"
 )
 
@@ -79,3 +81,83 @@ type Shareholder struct {
 
 // UpdateShareholderRequest is the entire shareholder object.
 type UpdateShareholderRequest Shareholder
+
+func (c *CreateCapTableRequest) Validate() error {
+	errMsgs := c.validate()
+	if len(errMsgs) > 0 {
+		return fmt.Errorf("validation failed: %s", strings.Join(errMsgs, ", "))
+	}
+	return nil
+}
+
+func (c *CreateCapTableRequest) validate() []string {
+	errMsgs := []string{}
+
+	if c.TotalShares < 1 {
+		errMsgs = append(errMsgs, "shares must exist to capitalize")
+	}
+	if c.CompanyName == "" {
+		errMsgs = append(errMsgs, "companyname must be present")
+	}
+	if c.SharePrice < 0 {
+		errMsgs = append(errMsgs, "sharePrice must be a positive number")
+	}
+	return errMsgs
+}
+
+func (u *UpdateCapTableRequest) Validate() error {
+	errMsgs := u.validate()
+	if len(errMsgs) > 0 {
+		return fmt.Errorf("validation failed: %s", strings.Join(errMsgs, ", "))
+	}
+	return nil
+}
+
+func (u *UpdateCapTableRequest) validate() []string {
+	errMsgs := u.CreateCapTableRequest.validate()
+	if u.ID < 1 {
+		errMsgs = append(errMsgs, "ID must be greater than 0")
+	}
+	return errMsgs
+}
+
+func (c *CreateShareholderRequest) Validate() error {
+	return nil
+}
+
+func (c *CreateShareholderRequest) validate() []string {
+	errMsgs := []string{}
+
+	return errMsgs
+}
+
+func (u *UpdateShareholderRequest) Validate() error {
+	return nil
+}
+
+func (u *UpdateShareholderRequest) validate() []string {
+	errMsgs := []string{}
+
+	return errMsgs
+}
+
+func (c *CreateOwnershipChunk) Validate() error {
+	return nil
+}
+
+func (c *CreateOwnershipChunk) validate() []string {
+
+	errMsgs := []string{}
+
+	return errMsgs
+}
+
+func (u *UpdateOwnershipChunk) Validate() error {
+	return nil
+}
+
+func (u *UpdateOwnershipChunk) validate() []string {
+	errMsgs := []string{}
+
+	return errMsgs
+}
