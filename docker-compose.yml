@@ -1,0 +1,16 @@
+# this docker compose opens up the services to all interfaces
+version: "3"
+services:
+  postgres:
+    # Image mdillon/postgis only supports major.minor versions.
+    image: mdillon/postgis:11-alpine
+    ports:
+      - "0.0.0.0:5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=captable
+    # uncomment these lines to log all postgres queries
+    #command:
+    #  - "postgres"
+    #  - "-c"
+    #  - "log_statement=all"
