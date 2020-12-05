@@ -29,7 +29,7 @@ endif
 
 install:
 	go install $(PIE) $(BRFLAG)
-	
+
 clean_test_db: 
 	GO111MODULE=off go get -tags 'postgres' -u github.com/golang-migrate/migrate/cmd/migrate
 	migrate -source file://db/postgres/migrations -database postgres://$(PGUSER):$(PGPASS)@$(PGHOST)/captable?sslmode=$(PGSSL) down -all
@@ -44,4 +44,4 @@ update_db:
 
 down_db:
 	GO111MODULE=off go get -tags 'postgres' -u github.com/golang-migrate/migrate/cmd/migrate
-	migrate -source file://db/postgres/migrations -database postgres://$(PGUSER):$(PGPASS)@$(PGHOST)/captable?sslmode=$(PGSSL) down force
+	migrate -source file://db/postgres/migrations -database postgres://$(PGUSER):$(PGPASS)@$(PGHOST)/captable?sslmode=$(PGSSL) down 

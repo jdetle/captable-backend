@@ -13,18 +13,36 @@ import (
 
 const createCTSQL = `
 INSERT INTO cap_tables (
-
+	total_shares, 
+	company_name,
+	shareholder_ids,
+    share_price,
 ) VALUES (
 	$1,
+	$2,
+	$3,
+	$4,
 ) RETURNING id
 `
 
-const readCTSQL = `
-
+const readCTSQL = `	
+SELECT 
+	id,
+	total_shares,
+	company_name,
+	shareholder_ids,
+	share_price
+FROM cap_tables
 `
 
 const updateCTSQL = `
-
+UPDATE cap_tables
+SET
+	total_shares=$1,
+	company_name=$2,
+	shareholder_ids=$3,
+	share_price=$4
+WHERE id=$5
 `
 
 // CreateCT creates the initial cap table in the database with zero shareholders.

@@ -24,13 +24,13 @@ type DAL interface {
 
 	CreateShareholder(ctx context.Context, ct *model.CreateShareholderRequest) (*model.Shareholder, error)
 	UpdateShareholder(ctx context.Context, sh *model.UpdateShareholderRequest) (*model.Shareholder, error)
-	ReadShareholder(ctx context.Context, shID int) (*model.Shareholder, error)
+	ReadShareholder(ctx context.Context, id int) (*model.Shareholder, error)
+	DeleteShareholder(ctx context.Context, id int) error
 
 	CreateOwnershipChunk(ctx context.Context, chunk *model.CreateOwnershipChunk) (*model.OwnershipChunk, error)
 	UpdateOwnershipChunk(ctx context.Context, chunk *model.UpdateOwnershipChunk) (*model.OwnershipChunk, error)
-
-	ReadOwnershipChunk(ctx context.Context, shID int, ctID int) (*model.OwnershipChunk, error)
-	DeleteOwnershipChunk(ctx context.Context, shID int, ctID int) error
+	ReadOwnershipChunk(ctx context.Context, id int) (*model.OwnershipChunk, error)
+	DeleteOwnershipChunk(ctx context.Context, id int) error
 }
 
 // Store lets us connect to the database.

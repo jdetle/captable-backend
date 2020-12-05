@@ -40,11 +40,11 @@ type UpdateCapTableRequest CapTable
 
 // ShareholderCreate contains all the info to initialize shareholder data.
 type CreateShareholderRequest struct {
-	Email                string                  `json:"email"`
-	CapTableID           int                     `json:"capTableId"`
-	FirstName            string                  `json:"firstName"`
-	LastName             string                  `json:"lastName"`
-	OwnershipChunkCreate *[]CreateOwnershipChunk `json:"ownershipChunks,omitEmpty"`
+	Email           string                  `json:"email"`
+	CapTableID      int                     `json:"capTableId"`
+	FirstName       string                  `json:"firstName"`
+	LastName        string                  `json:"lastName"`
+	OwnershipChunks *[]CreateOwnershipChunk `json:"ownershipChunks,omitEmpty"`
 }
 
 type AddShareholdersRequest struct {
@@ -53,29 +53,21 @@ type AddShareholdersRequest struct {
 }
 
 type CreateOwnershipChunk struct {
-	SharesOwned int
-	OwnerID     int
-	OwnerName   *string
-
+	SharesOwned   int
+	SharePrice    float64
 	ShareholderID int `json:"shareholderId"`
 	CapTableID    int `json:"capTableId"`
 }
 
 // OwnershipChunk is the representation of a discrete award of company shares at a given fundraising round.
 type OwnershipChunk struct {
-	ID int `json:"id"`
+	ID        int        `json:"id"`
+	UpdatedAt *time.Time `json:"updatedAt,omitEmpty"`
+	CreatedAt *time.Time `json:"createdAt,omitEmpty"`
 	CreateOwnershipChunk
 }
 
-type UpdateOwnershipChunk struct {
-	ShareholderID int `json:"shareholderId"`
-	CapTableID    int `json:"capTableId"`
-}
-
-type DeleteOwnershipChunk struct {
-	ShareholderID int `json:"shareholderId"`
-	CapTableID    int `json:"capTableId"`
-}
+type UpdateOwnershipChunk OwnershipChunk
 
 // Shareholder is shareholder data after its been created
 type Shareholder struct {

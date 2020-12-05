@@ -1,5 +1,3 @@
-// Package classification CapTable API.
-//
 // The Captable API provides a REST interface to a fictional capital table
 //
 // Terms Of Service:
