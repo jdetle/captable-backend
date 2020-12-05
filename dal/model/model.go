@@ -21,6 +21,14 @@ func contains(a []string, x string) bool {
 
 var emailRegex = regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
 
+// isEmailValid checks if the email provided passes the required structure and length.
+func isEmailValid(e string) bool {
+	if len(e) < 3 && len(e) > 254 {
+		return false
+	}
+	return emailRegex.MatchString(e)
+}
+
 // CreateCapTableRequest has all the data to create a new cap table.
 type CreateCapTableRequest struct {
 	TotalShares int     `json:"totalShares"`
@@ -47,11 +55,6 @@ type CreateShareholderRequest struct {
 	FirstName       string                  `json:"firstName"`
 	LastName        string                  `json:"lastName"`
 	OwnershipChunks *[]CreateOwnershipChunk `json:"ownershipChunks,omitEmpty"`
-}
-
-type AddShareholdersRequest struct {
-	CapTableID   int                         `json:"capTableId"`
-	Shareholders *[]CreateShareholderRequest `json:"shareholders,omitEmpty"`
 }
 
 type CreateOwnershipChunk struct {
@@ -122,42 +125,80 @@ func (u *UpdateCapTableRequest) validate() []string {
 }
 
 func (c *CreateShareholderRequest) Validate() error {
+	errMsgs := c.validate()
+	if len(errMsgs) > 0 {
+		return fmt.Errorf("validation failed: %s", strings.Join(errMsgs, ", "))
+	}
 	return nil
 }
 
 func (c *CreateShareholderRequest) validate() []string {
 	errMsgs := []string{}
-
+	if c.FirstName == "" {
+		errMsgs = append(errMsgs, "first name must be present")
+	}
+	if c.LastName == "" {
+		errMsgs = append(errMsgs, "last name must be present")
+	}
+	if !isEmailValid(c.Email) {
+		errMsgs = append(errMsgs, "valid email must be supplied")
+	}
 	return errMsgs
 }
 
 func (u *UpdateShareholderRequest) Validate() error {
+	errMsgs := u.validate()
+	if len(errMsgs) > 0 {
+		return fmt.Errorf("validation failed: %s", strings.Join(errMsgs, ", "))
+	}
 	return nil
 }
 
 func (u *UpdateShareholderRequest) validate() []string {
-	errMsgs := []string{}
-
+	errMsgs := u.CreateShareholderRequest.validate()
+	if u.ID < 1 {
+		errMsgs = append(errMsgs, "ID must be greater than 0")
+	}
 	return errMsgs
 }
 
 func (c *CreateOwnershipChunk) Validate() error {
+	errMsgs := c.validate()
+	if len(errMsgs) > 0 {
+		return fmt.Errorf("validation failed: %s", strings.Join(errMsgs, ", "))
+	}
 	return nil
 }
 
 func (c *CreateOwnershipChunk) validate() []string {
-
 	errMsgs := []string{}
-
+	if c.CapTableID < 1 {
+		errMsgs = append(errMsgs, "captable id must be present")
+	}
+	if c.ShareholderID < 1 {
+		errMsgs = append(errMsgs, "shareholder id must be present")
+	}
+	if c.SharePrice < 0 {
+		errMsgs = append(errMsgs, "share price cannot be less than 0")
+	}
+	if c.SharesOwned < 1 {
+		errMsgs = append(errMsgs, "shares owned must exist")
+	}
 	return errMsgs
 }
 
 func (u *UpdateOwnershipChunk) Validate() error {
+	errMsgs := u.validate()
+	if len(errMsgs) > 0 {
+		return fmt.Errorf("validation failed: %s", strings.Join(errMsgs, ", "))
+	}
 	return nil
 }
 
 func (u *UpdateOwnershipChunk) validate() []string {
-	errMsgs := []string{}
-
+	errMsgs := u.CreateOwnershipChunk.validate()
+	if u.ID < 1 {
+		errMsgs = append(errMsgs, "ID must be greater than 0")
+	}
 	return errMsgs
 }
