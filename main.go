@@ -42,7 +42,8 @@ func main() {
 	)
 	postgresConnURL := flag.String("postgres-conn-url", "postgres://postgres:postgres@localhost/captable",
 		"Postgres connection URL") // POSTGRES_CONN_URL
-
+	flag.Parse()
+	log.Infof("pg url %s", *postgresConnURL)
 	cfg := &config.Config{
 		PostgresConnURL: *postgresConnURL,
 	}
@@ -55,6 +56,7 @@ func main() {
 			break
 		}
 		log.Errorf("unable to initiate postgres conn attempt %d: %#v", i, err)
+		log.Errorf("error %s:", *postgresConnURL)
 		time.Sleep(time.Second)
 	}
 	if err != nil {

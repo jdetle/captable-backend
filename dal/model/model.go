@@ -57,9 +57,12 @@ type CreateShareholderRequest struct {
 	OwnershipChunks *[]CreateOwnershipChunk `json:"ownershipChunks,omitEmpty"`
 }
 
+type CreateOwnershipChunkRequest struct {
+	SharesOwned int     `json:"sharesOwned"`
+	SharePrice  float64 `json:"sharePrice"`
+}
 type CreateOwnershipChunk struct {
-	SharesOwned   int
-	SharePrice    float64
+	CreateOwnershipChunkRequest
 	ShareholderID int `json:"shareholderId"`
 	CapTableID    int `json:"capTableId"`
 }

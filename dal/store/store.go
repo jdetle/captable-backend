@@ -41,6 +41,7 @@ type Store struct {
 // NewPostgres creates a store.
 func NewPostgres(ctx context.Context, dbURL string) (*Store, error) {
 	conn, err := sql.Open("pgx", dbURL)
+
 	if err != nil {
 		return nil, err
 	}
