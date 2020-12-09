@@ -27,8 +27,8 @@ type DAL interface {
 	ReadShareholder(ctx context.Context, id int) (*model.Shareholder, error)
 	DeleteShareholder(ctx context.Context, id int) error
 
-	CreateOwnershipChunk(ctx context.Context, chunk *model.CreateOwnershipChunk) (*model.OwnershipChunk, error)
-	UpdateOwnershipChunk(ctx context.Context, chunk *model.UpdateOwnershipChunk) (*model.OwnershipChunk, error)
+	CreateOwnershipChunk(ctx context.Context, chunk *model.CreateOwnershipChunkRequest) (*model.OwnershipChunk, error)
+	UpdateOwnershipChunk(ctx context.Context, chunk *model.UpdateOwnershipChunkRequest) (*model.OwnershipChunk, error)
 	ReadOwnershipChunk(ctx context.Context, id int) (*model.OwnershipChunk, error)
 	DeleteOwnershipChunk(ctx context.Context, id int) error
 }

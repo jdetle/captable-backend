@@ -16,6 +16,7 @@ type CreateCapTableRequest struct {
 	CompanyName string  `json:"companyName"`
 }
 
+// CreateCapTableRequestWithShareholders with shareholders is a composition of shareholders with create captable request so that the overriding of shareholders isn't done implicitly.
 type CreateCapTableRequestWithShareholders struct {
 	Shareholders *[]CreateShareholderRequest `json:"shareholders"`
 	CreateCapTableRequest
@@ -26,13 +27,14 @@ type CapTable struct {
 	ID           int            `json:"id"`
 	UpdatedAt    *time.Time     `json:"updatedAt,omitEmpty"`
 	CreatedAt    *time.Time     `json:"createdAt,omitEmpty"`
-	Shareholders *[]Shareholder `json`
+	Shareholders *[]Shareholder `json:"shareholders"`
 	CreateCapTableRequest
 }
 
 // UpdateCapTableRequest is the payload required to update a captable
 type UpdateCapTableRequest CapTable
 
+// Validate checks the incoming captable request payload to prevent a bad response.
 func (c *CreateCapTableRequest) Validate() error {
 	errMsgs := c.validate()
 	if len(errMsgs) > 0 {
@@ -56,6 +58,7 @@ func (c *CreateCapTableRequest) validate() []string {
 	return errMsgs
 }
 
+// Validate checks the incoming update captable request payload to prevent a bad response.
 func (u *UpdateCapTableRequest) Validate() error {
 	errMsgs := u.validate()
 	if len(errMsgs) > 0 {

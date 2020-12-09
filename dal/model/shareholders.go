@@ -11,11 +11,11 @@ import (
 
 // ShareholderCreate contains all the info to initialize shareholder data.
 type CreateShareholderRequest struct {
-	Email           string                  `json:"email"`
-	CapTableID      int                     `json:"capTableId"`
-	FirstName       string                  `json:"firstName"`
-	LastName        string                  `json:"lastName"`
-	OwnershipChunks *[]CreateOwnershipChunk `json:"ownershipChunks,omitEmpty"`
+	Email           string                         `json:"email"`
+	CapTableID      int                            `json:"capTableId"`
+	FirstName       string                         `json:"firstName"`
+	LastName        string                         `json:"lastName"`
+	OwnershipChunks *[]CreateOwnershipChunkRequest `json:"ownershipChunks,omitEmpty"`
 }
 
 // Shareholder is shareholder data after its been created

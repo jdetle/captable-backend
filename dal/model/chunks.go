@@ -10,14 +10,10 @@ import (
 )
 
 type CreateOwnershipChunkRequest struct {
-	SharesOwned int     `json:"sharesOwned"`
-	SharePrice  float64 `json:"sharePrice"`
-}
-
-type CreateOwnershipChunk struct {
-	CreateOwnershipChunkRequest
-	ShareholderID int `json:"shareholderId"`
-	CapTableID    int `json:"capTableId"`
+	SharesOwned   int     `json:"sharesOwned"`
+	SharePrice    float64 `json:"sharePrice"`
+	ShareholderID int     `json:"shareholderId"`
+	CapTableID    int     `json:"capTableId"`
 }
 
 // OwnershipChunk is the representation of a discrete award of company shares at a given fundraising round.
@@ -25,12 +21,13 @@ type OwnershipChunk struct {
 	ID        int        `json:"id"`
 	UpdatedAt *time.Time `json:"updatedAt,omitEmpty"`
 	CreatedAt *time.Time `json:"createdAt,omitEmpty"`
-	CreateOwnershipChunk
+	CreateOwnershipChunkRequest
 }
 
-type UpdateOwnershipChunk OwnershipChunk
+type UpdateOwnershipChunkRequest OwnershipChunk
 
-func (c *CreateOwnershipChunk) Validate() error {
+// Validate checks the create ownership chunk payload to prevent a bad response.
+func (c *CreateOwnershipChunkRequest) Validate() error {
 	errMsgs := c.validate()
 	if len(errMsgs) > 0 {
 		return fmt.Errorf("validation failed: %s", strings.Join(errMsgs, ", "))
@@ -38,7 +35,7 @@ func (c *CreateOwnershipChunk) Validate() error {
 	return nil
 }
 
-func (c *CreateOwnershipChunk) validate() []string {
+func (c *CreateOwnershipChunkRequest) validate() []string {
 	errMsgs := []string{}
 	if c.CapTableID < 1 {
 		errMsgs = append(errMsgs, "captable id must be present")
@@ -55,7 +52,8 @@ func (c *CreateOwnershipChunk) validate() []string {
 	return errMsgs
 }
 
-func (u *UpdateOwnershipChunk) Validate() error {
+// Validate checks the update ownership chunk payload to prevent a bad response.
+func (u *UpdateOwnershipChunkRequest) Validate() error {
 	errMsgs := u.validate()
 	if len(errMsgs) > 0 {
 		return fmt.Errorf("validation failed: %s", strings.Join(errMsgs, ", "))
@@ -63,8 +61,8 @@ func (u *UpdateOwnershipChunk) Validate() error {
 	return nil
 }
 
-func (u *UpdateOwnershipChunk) validate() []string {
-	errMsgs := u.CreateOwnershipChunk.validate()
+func (u *UpdateOwnershipChunkRequest) validate() []string {
+	errMsgs := u.CreateOwnershipChunkRequest.validate()
 	if u.ID < 1 {
 		errMsgs = append(errMsgs, "ID must be greater than 0")
 	}

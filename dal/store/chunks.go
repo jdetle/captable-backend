@@ -43,7 +43,7 @@ WHERE id=$5
 `
 
 // CreateOwnershipChunk attaches a new ownership chunk to a shareholder and a cap table.
-func (s *Store) CreateOwnershipChunk(ctx context.Context, oc *model.CreateOwnershipChunk) (*model.OwnershipChunk, error) {
+func (s *Store) CreateOwnershipChunk(ctx context.Context, oc *model.CreateOwnershipChunkRequest) (*model.OwnershipChunk, error) {
 	log.Debugf("CREATE OWNERSHIP CHUNK: %#v", oc)
 
 	var id int
@@ -56,15 +56,11 @@ func (s *Store) CreateOwnershipChunk(ctx context.Context, oc *model.CreateOwners
 	if err != nil {
 		return nil, err
 	}
-	resp := &model.OwnershipChunk{
-		ID:                   int(id),
-		CreateOwnershipChunk: *oc,
-	}
-	return resp, err
+	return s.ReadOwnershipChunk(ctx, id)
 }
 
 // UpdateOwnershipChunk modifies an existing ownership chunk attached to a cap table and shareholder.
-func (s *Store) UpdateOwnershipChunk(ctx context.Context, oc *model.UpdateOwnershipChunk) (*model.OwnershipChunk, error) {
+func (s *Store) UpdateOwnershipChunk(ctx context.Context, oc *model.UpdateOwnershipChunkRequest) (*model.OwnershipChunk, error) {
 	log.Debugf("UPDATE OWNERSHIP CHUNK: %#v", oc)
 	result, err := s.Conn.ExecContext(ctx, updateChunkSQL,
 		oc.SharesOwned,
