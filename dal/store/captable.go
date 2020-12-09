@@ -46,24 +46,44 @@ WHERE id=$5
 `
 
 // CreateCT creates the initial cap table in the database with zero shareholders.
-func (s *Store) CreateCT(ctx context.Context, ct *model.CreateCapTableRequest) (*model.CapTable, error) {
+func (s *Store) CreateCT(ctx context.Context, ct *model.CreateCapTableRequestWithShareholders) (*model.CapTable, error) {
 	log.Debugf("CREATE CAP TABLE: %#v", ct)
 
 	var id int
+	var shareholders []model.Shareholder
 	err := s.Conn.QueryRowContext(ctx, createCTSQL,
 		ct.CompanyName,
 		ct.SharePrice,
 		ct.TotalShares,
 	).Scan(&id)
+	tx, err := s.Conn.BeginTx(ctx, nil)
+	if err != nil {
+		return nil, err
+	}
+	for _, item := range *ct.Shareholders {
+		resp, err := s.CreateShareholder(ctx, &item)
+		shareholders = append(shareholders, *resp)
+		if err != nil {
+			log.Errorf("%#v", err)
+			tx.Rollback()
+		}
+	}
+	err = tx.Commit()
 	if err != nil {
 		return nil, err
 	}
 	updatedAt := time.Now()
+	createdAt := time.Now()
 	resp := &model.CapTable{
-		ID:                    int(id),
-		UpdatedAt:             &updatedAt,
-		Shareholders:          nil,
-		CreateCapTableRequest: *ct,
+		ID:           int(id),
+		UpdatedAt:    &updatedAt,
+		CreatedAt:    &createdAt,
+		Shareholders: &shareholders,
+		CreateCapTableRequest: model.CreateCapTableRequest{
+			TotalShares: ct.TotalShares,
+			SharePrice:  ct.SharePrice,
+			CompanyName: ct.CompanyName,
+		},
 	}
 	return resp, err
 }

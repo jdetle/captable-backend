@@ -16,7 +16,7 @@ import (
 func CreateCTHandler(cfg *config.Config, captable *captable.CapTable) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		log.Debugf("CREATECTHANDLER: %#v", r)
-		var payload model.CreateCapTableRequest
+		var payload model.CreateCapTableRequestWithShareholders
 		err := httputils.ValidateJSONPayload(w, r.Body, &payload)
 		if err != nil {
 			return

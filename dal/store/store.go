@@ -16,7 +16,7 @@ var ErrNoUpdatedRows = errors.New("no rows were updated")
 
 // DAL allows us to mock out our data access layer for testing.
 type DAL interface {
-	CreateCT(ctx context.Context, ct *model.CreateCapTableRequest) (*model.CapTable, error)
+	CreateCT(ctx context.Context, ct *model.CreateCapTableRequestWithShareholders) (*model.CapTable, error)
 	UpdateCT(ctx context.Context, ct *model.UpdateCapTableRequest) (*model.CapTable, error)
 	ReadCT(ctx context.Context, id int) (*model.CapTable, error)
 	DeleteCT(ctx context.Context, id int) error
